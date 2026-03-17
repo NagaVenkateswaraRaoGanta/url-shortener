@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Shortener</title>
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            font-family: Arial;
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            text-align: center;
+            width: 400px;
+            backdrop-filter: blur(10px);
+        }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #00c6ff;
+            color: black;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .result {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .short-url {
+            margin-top: 10px;
+            background: #111;
+            padding: 10px;
+            border-radius: 8px;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            margin-top: 10px;
+            background: #00ffcc;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>🔗 URL Shortener</h2>
+
+    <input type="text" id="urlInput" placeholder="Enter your URL">
+
+    <br>
+    <button onclick="shortenUrl()">Shorten</button>
+
+    <div class="result" id="resultBox">
+        <p>Short URL:</p>
+        <div class="short-url" id="shortUrl"></div>
+        <button class="copy-btn" onclick="copyUrl()">Copy</button>
+    </div>
+</div>
+
+<script>
+    function shortenUrl() {
+        let url = document.getElementById("urlInput").value;
+
+        if (!url) {
+            alert("Please enter a URL");
+            return;
+        }
+
+        fetch(`http://localhost:8080/shorten?url=${url}`)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("resultBox").style.display = "block";
+            document.getElementById("shortUrl").innerText = data;
+        })
+        .catch(error => {
+            alert("Error: " + error);
+        });
+    }
+
+    function copyUrl() {
+        let text = document.getElementById("shortUrl").innerText;
+        navigator.clipboard.writeText(text);
+        alert("Copied!");
+    }
+</script>
+
+</body>
+</html>
